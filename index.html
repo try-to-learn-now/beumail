@@ -26,28 +26,28 @@
       font-family: Arial, Helvetica, sans-serif;
       background: radial-gradient(circle at top, #0f1b33 0%, #0b1220 38%, #08101c 100%);
       color: var(--text);
-      line-height: 1.5;
+      line-height: 1.4;
     }
 
     .wrap {
       max-width: 860px;
       margin: 0 auto;
-      padding: 14px;
+      padding: 10px; /* Reduced from 14px */
     }
 
     .card {
       background: rgba(17, 24, 39, 0.97);
       border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 16px;
-      margin-bottom: 14px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+      border-radius: 14px; /* Reduced from 18px */
+      padding: 12px 14px; /* Reduced from 16px */
+      margin-bottom: 10px; /* Reduced from 14px */
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
     }
 
-    h1, h2 { margin: 0 0 10px; }
+    h1, h2 { margin: 0 0 8px; } /* Reduced from 10px */
 
     h1 {
-      font-size: clamp(18px, 4.3vw, 24px);
+      font-size: clamp(18px, 4vw, 22px);
       line-height: 1.2;
       letter-spacing: 0.2px;
       white-space: nowrap;
@@ -56,27 +56,27 @@
       text-align: center;
     }
 
-    h2 { font-size: 20px; }
+    h2 { font-size: 18px; } /* Reduced from 20px */
 
     .grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
+      gap: 10px; /* Reduced from 14px */
     }
 
     label {
       display: block;
       font-weight: 700;
-      margin-bottom: 6px;
-      font-size: 15px;
+      margin-bottom: 4px; /* Reduced from 6px */
+      font-size: 14px; /* Reduced from 15px */
     }
 
     input {
       width: 100%;
       border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 13px 14px;
-      font-size: 15px;
+      border-radius: 10px; /* Reduced from 14px */
+      padding: 10px 12px; /* Reduced from 13px 14px */
+      font-size: 14px; /* Reduced from 15px */
       color: #f8fafc;
       background: #0f172a;
       outline: none;
@@ -108,34 +108,34 @@
     .btns {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 12px;
+      gap: 8px; /* Reduced from 10px */
+      margin-top: 10px; /* Reduced from 12px */
     }
 
     .btns.single {
       grid-template-columns: 1fr;
       margin-top: 0;
-      margin-bottom: 14px;
+      margin-bottom: 10px; /* Reduced from 14px */
     }
 
     button {
       appearance: none;
       border: 0;
-      border-radius: 14px;
-      padding: 14px 16px;
-      font-size: 15px;
+      border-radius: 10px; /* Reduced from 14px */
+      padding: 10px 12px; /* Reduced from 14px 16px */
+      font-size: 14px; /* Reduced from 15px */
       font-weight: 700;
       cursor: pointer;
-      min-height: 52px;
+      min-height: 44px; /* Reduced from 52px */
       text-align: center;
-      line-height: 1.25;
+      line-height: 1.2;
       white-space: normal;
       word-break: break-word;
       transition: transform 0.08s ease, opacity 0.08s ease;
     }
 
     button:active {
-      transform: scale(0.99);
+      transform: scale(0.98);
       opacity: 0.95;
     }
 
@@ -145,10 +145,10 @@
     .grievance-btn { background: var(--blue); color: #fff; }
 
     .status {
-      border-radius: 14px;
-      padding: 12px 13px;
-      font-size: 14px;
-      margin-top: 12px;
+      border-radius: 10px;
+      padding: 10px; /* Reduced from 12px 13px */
+      font-size: 13px; /* Reduced from 14px */
+      margin-top: 10px; /* Reduced from 12px */
       background: var(--status-bg);
       border: 1px solid var(--status-line);
       color: var(--status-text);
@@ -341,7 +341,7 @@
       const intro = introWithCollege(studentName, regNo, college, 'am submitting this grievance regarding my own affected result.');
       const sign = signBlock(studentName, regNo, college);
 
-      return `Respected Sir/Madam,\n\nPlease treat this email as my own grievance regarding the apparent continued application of the earlier backlog grade penalty despite Registrar Letter No. 232 dated 12.03.2026, Memo No. 438/2026/Patna, and the revised UG Regulation provisions including Clause 5.7.\n\n${intro}\n\nAs per the compiled discrepancy data, my case reflects PENALTY_CONFIRMED in the following subject(s): ${match.subject_names}. The published grades shown are ${match.new_shown_grades}, whereas the grades that should have been awarded are ${match.should_be_grades}. My shown SGPA/CGPA are ${match.shown_sgpa}/${match.shown_cgpa}, whereas the corrected SGPA/CGPA are ${match.corrected_sgpa}/${match.corrected_cgpa}.\n\nUnder the earlier rule, a backlog paper grade was reduced by one step. Under the revised framework, that one-step-lower penalty no longer continues. My result therefore requires immediate examination and correction in accordance with the revised framework.\n\nI request immediate correction and republication of my affected result, along with a brief written clarification at the earliest.\n\nThe representation, annexures, and documentary evidence are attached with this email for reference.\n\n${niteshContactBlock()}\n\nYours faithfully,\n${sign}`;
+      return `Respected Sir/Madam,\n\nPlease treat this email as my own grievance regarding the apparent continued application of the earlier backlog grade penalty despite Registrar Letter No. 232 dated 12.03.2026, Memo No. 438/2026/Patna, and the revised UG Regulation provisions including Clause 5.7.\n\n${intro}\n\nAs per the compiled discrepancy data, my case reflects PENALTY_CONFIRMED in the following subject(s): *${match.subject_names.toUpperCase()}*. \n\nThe published grades shown are ${match.new_shown_grades}, whereas the grades that should have been awarded are ${match.should_be_grades}. \n\nMy shown SGPA/CGPA are *${match.shown_sgpa} / ${match.shown_cgpa}*, whereas the corrected SGPA/CGPA are *${match.corrected_sgpa} / ${match.corrected_cgpa}*.\n\nUnder the earlier rule, a backlog paper grade was reduced by one step. Under the revised framework, that one-step-lower penalty no longer continues. My result therefore requires immediate examination and correction in accordance with the revised framework.\n\nI request immediate correction and republication of my affected result, along with a brief written clarification at the earliest.\n\nThe representation, annexures, and documentary evidence are attached with this email for reference.\n\nYours faithfully,\n${sign}`;
     }
 
     function makeGenericGrievanceBody() {
