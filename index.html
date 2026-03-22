@@ -105,7 +105,7 @@ input:focus {
 
 .btns {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
   margin-top: 12px;
 }
@@ -120,12 +120,21 @@ button {
   appearance: none;
   border: 0;
   border-radius: 14px;
-  padding: 13px 14px;
+  padding: 14px 16px;
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
-  min-height: 50px;
+  min-height: 52px;
   text-align: center;
+  line-height: 1.25;
+  white-space: normal;
+  word-break: break-word;
+  transition: transform 0.08s ease, opacity 0.08s ease;
+}
+
+button:active {
+  transform: scale(0.99);
+  opacity: 0.95;
 }
 
 .download-btn { background: var(--red); color: #fff; }
@@ -152,7 +161,10 @@ button {
 .hidden { display: none; }
 
 @media (max-width: 760px) {
-  .grid, .btns { grid-template-columns: 1fr; }
+  .grid,
+  .btns {
+    grid-template-columns: 1fr;
+  }
 }
 
   </style>
@@ -183,9 +195,9 @@ button {
   </div>
 
   <div class="btns">
-    <button class="lookup-btn" id="lookupBtn">Get name</button>
-    <button class="support-btn" id="supportMailBtn">Send support mail</button>
-    <button class="grievance-btn" id="grievanceMailBtn">Send grievance mail</button>
+    <button class="lookup-btn" id="lookupBtn">Get Name</button>
+    <button class="support-btn" id="supportMailBtn">Support Mail</button>
+    <button class="grievance-btn" id="grievanceMailBtn">Grievance Mail</button>
   </div>
 
   <div class="status" id="lookupStatus">If name is not found, type manually.</div>
