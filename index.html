@@ -1,0 +1,356 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BEU Grievance Support</title>
+  <style>
+    :root {
+      --bg: #0b1220;
+      --card: #111827;
+      --text: #e5e7eb;
+      --line: #243042;
+      --blue: #3b82f6;
+      --blue-soft: #172554;
+      --green: #16a34a;
+      --green-soft: #052e1a;
+      --dark: #991b1b;
+      --status-bg: #0f1b33;
+      --status-line: #29406b;
+      --status-text: #c7d2fe;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: radial-gradient(circle at top, #0f1b33 0%, #0b1220 38%, #08101c 100%);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 14px;
+    }
+    .card {
+      background: rgba(17, 24, 39, 0.96);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+    }
+    h1, h2 { margin: 0 0 10px; }
+    h1 {
+      font-size: clamp(18px, 4.3vw, 24px);
+      line-height: 1.2;
+      letter-spacing: 0.2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: center;
+    }
+    h2 { font-size: 20px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 6px;
+      font-size: 15px;
+    }
+    input {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 13px 14px;
+      font-size: 15px;
+      color: #f8fafc;
+      background: #0f172a;
+      outline: none;
+      -webkit-text-fill-color: #f8fafc;
+      caret-color: #f8fafc;
+      opacity: 1;
+      appearance: none;
+    }
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active {
+      -webkit-text-fill-color: #f8fafc !important;
+      caret-color: #f8fafc;
+      -webkit-box-shadow: 0 0 0 1000px #0f172a inset !important;
+      box-shadow: 0 0 0 1000px #0f172a inset !important;
+      transition: background-color 9999s ease-in-out 0s;
+      border: 1px solid var(--line);
+    }
+    input::placeholder { color: #77839a; }
+    input:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    }
+    .btns {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .btns.single {
+      grid-template-columns: 1fr;
+      margin-top: 0;
+      margin-bottom: 14px;
+    }
+    button {
+      appearance: none;
+      border: 0;
+      border-radius: 14px;
+      padding: 13px 14px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      min-height: 50px;
+    }
+    .lookup-btn { background: var(--green); color: #ffffff; }
+    .support-btn { background: var(--blue-soft); color: #dbeafe; }
+    .grievance-btn { background: var(--blue); color: #ffffff; }
+    .download-btn { background: var(--dark); color: #fef2f2; }
+    .status {
+      border-radius: 14px;
+      padding: 12px 13px;
+      font-size: 14px;
+      margin-top: 12px;
+      background: var(--status-bg);
+      border: 1px solid var(--status-line);
+      color: var(--status-text);
+    }
+    .ok {
+      background: var(--green-soft);
+      border: 1px solid #14532d;
+      color: #86efac;
+    }
+    .hidden { display: none; }
+    @media (max-width: 760px) {
+      .grid { grid-template-columns: 1fr; }
+      .btns { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>BEU Grievance Support</h1>
+    </div><div class="card">
+  <div class="btns single">
+    <button class="download-btn" id="downloadBtn">Download PDF</button>
+  </div>
+
+  <h2>Student details</h2>
+  <div class="grid">
+    <div>
+      <label for="regNo">Registration number</label>
+      <input id="regNo" type="text" placeholder="Example: XXXXXXXX010" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
+    </div>
+    <div>
+      <label for="studentName">Student name</label>
+      <input id="studentName" type="text" placeholder="Auto-filled or type manually" autocomplete="off" autocapitalize="words" autocorrect="off" spellcheck="false" />
+    </div>
+    <div>
+      <label for="college">College</label>
+      <input id="college" type="text" placeholder="Auto-filled or type manually" autocomplete="off" autocapitalize="words" autocorrect="off" spellcheck="false" />
+    </div>
+  </div>
+
+  <div class="btns">
+    <button class="lookup-btn" id="lookupBtn">Get name</button>
+    <button class="support-btn" id="supportMailBtn">Send support mail</button>
+    <button class="grievance-btn" id="grievanceMailBtn">Send grievance mail</button>
+  </div>
+
+  <div class="status" id="lookupStatus">If name is not found, type it manually.</div>
+  <div class="status" id="downloadStatus">Download the PDF first, then attach it manually in the mail app.</div>
+</div>
+
+  </div>  <script>
+    const TO = [
+      'beubihar@gmail.com',
+      'registrar.beu@bihar.gov.in',
+      'coe.beu@bihar.gov.in'
+    ];
+
+    const CC = [
+      'complaint@aicte-india.org',
+      'helpdesk1@aicte-india.org',
+      'prsec_sctech@bihar.gov.in',
+      'ps.dst.bihar@gmail.com',
+      'secy-edn-bih@nic.in',
+      'splsecretary.edn@gmail.com',
+      'ssabihar@gmail.com',
+      'info@bepcssa.in',
+      'info-Lokshikayat-bih@gov.in',
+      'us.petitions@rb.nic.in',
+      'secy.president@rb.nic.in',
+      'nhrcga@nic.in',
+      'bhrc-bih@nic.in',
+      'ugc.technical@nic.in',
+      'contact.ugc@nic.in'
+    ];
+
+    const SUBJECT = 'URGENT: Mass Grievance (1330+ Students) - Old Backlog Penalty Applied in B.Tech 2nd Sem & 4th Sem Results';
+    const PDF_PATH = '/files/Representation_Annexures_and_Evidence_BEU_Result_13-03-2026.pdf';
+
+    const LOOKUP_VARIANTS = [
+      { year: '2025', semester: 'II', exam_held: 'November/2025' },
+      { year: '2025', semester: 'IV', exam_held: 'December/2025' },
+      { year: '2025', semester: 'VI', exam_held: 'November/2025' },
+      { year: '2025', semester: 'VIII', exam_held: 'May/2025' },
+      { year: '2024', semester: 'I', exam_held: 'May/2025' },
+      { year: '2024', semester: 'III', exam_held: 'July/2025' }
+    ];
+
+    const regNoEl = document.getElementById('regNo');
+    const studentNameEl = document.getElementById('studentName');
+    const collegeEl = document.getElementById('college');
+    const lookupStatusEl = document.getElementById('lookupStatus');
+    const downloadStatusEl = document.getElementById('downloadStatus');
+
+    function buildLookupUrl(regNo, variant) {
+      return `https://beu-bih.ac.in/backend/v1/result/get-result?year=${encodeURIComponent(variant.year)}&redg_no=${encodeURIComponent(regNo)}&semester=${encodeURIComponent(variant.semester)}&exam_held=${encodeURIComponent(variant.exam_held)}`;
+    }
+
+    function makeSupportBody() {
+      const studentName = (studentNameEl.value || '________________').trim();
+      const regNo = (regNoEl.value || '________________').trim();
+      const college = (collegeEl.value || '').trim();
+
+      const intro = college
+        ? `I, ${studentName}, Registration No. ${regNo}, student of ${college}, write in support of the representation submitted by Nitesh Kumar, Registration No. 23104134010, student of Government Engineering College, Banka, on behalf of 1330+ affected students across the state.`
+        : `I, ${studentName}, Registration No. ${regNo}, write in support of the representation submitted by Nitesh Kumar, Registration No. 23104134010, student of Government Engineering College, Banka, on behalf of 1330+ affected students across the state.`;
+
+      const sign = college
+        ? `${studentName}
+Registration No.: ${regNo}
+${college}`
+        : `${studentName}
+Registration No.: ${regNo}`;
+
+      return `Respected Sir/Madam,
+
+Please find attached the formal representation, along with annexures and documentary evidence, regarding the heavily flawed B.Tech. 2nd Semester Examination, 2025 (Old) result published on 13.03.2026.
+
+This email also seeks immediate halt and review of the B.Tech. 4th Semester Examination, 2025 (Session 2023-27, Exam Held: December/2025, Result Published: 20.03.2026), as the same systemic error appears to have been carried forward there as well.
+
+${intro}
+
+The issue is that the University's result-processing appears to have continued the earlier backlog grade penalty even after Registrar Letter No. 232 dated 12.03.2026, Memo No. 438/2026/Patna, and the revised UG Regulation provisions including Clause 5.7. Under the old rule, a backlog paper grade was reduced by one step. Under the revised framework, that one-step-lower penalty no longer continues.
+
+The attached PDF contains the relevant notices, clause comparisons, and student-wise discrepancy records supporting immediate review, correction of the grading logic, and republication of all affected results.
+
+I request immediate examination of the matter, correction of the result-processing logic across all affected semesters, republication of the affected results wherever required, and issuance of a brief written clarification at the earliest.
+
+For communication on the main grievance, the lead student representative is:
+Nitesh Kumar
+Registration No.: 23104134010
+Government Engineering College, Banka
+Email: 23104134010@gecbanka.org / nkcbanka@gmail.com
+
+Yours faithfully,
+${sign}`;
+    }
+
+    function makeGrievanceBody() {
+      return `Respected Sir/Madam,
+
+Please find attached my formal representation, along with annexures and documentary evidence, regarding the heavily flawed B.Tech. 2nd Semester Examination, 2025 (Old) results published on 13.03.2026.
+
+Furthermore, this representation serves as an urgent appeal to immediately halt and review the newly published B.Tech. 4th Semester Examination, 2025 (Session 2023-27, Exam Held: December/2025, Result Published: 20.03.2026), which suffers from the exact same systemic error.
+
+I, Nitesh Kumar, Registration No. 23104134010, student of Government Engineering College, Banka, am submitting this representation on behalf of 1330+ affected students across the state.
+
+The University's result-processing appears to have continued the old backlog grade penalty despite Registrar Letter No. 232 dated 12.03.2026, Memo No. 438/2026/Patna, and the revised UG Regulation provisions including Clause 5.7. Under the old rule, a backlog paper grade was reduced by one step. Under the revised framework, that one-step-lower penalty no longer continues.
+
+The attached PDF contains the relevant notices, clause comparisons, and student-wise discrepancy records indicating the need for immediate review, correction of the grading logic, and republication of the affected results.
+
+In view of the above, I request immediate examination of the matter, universal correction of the result-processing logic across all affected semesters, republication of the affected 2nd and 4th Semester results wherever required, and issuance of a brief written clarification at the earliest.
+
+Yours faithfully,
+Nitesh Kumar
+Registration No.: 23104134010
+Government Engineering College, Banka
+On behalf of 1330+ affected students
+Email: 23104134010@gecbanka.org / nkcbanka@gmail.com`;
+    }
+
+    async function lookupStudent() {
+      const regNo = regNoEl.value.trim();
+      if (!regNo) {
+        lookupStatusEl.classList.remove('hidden');
+        lookupStatusEl.textContent = 'Enter registration number first.';
+        lookupStatusEl.className = 'status';
+        return;
+      }
+
+      lookupStatusEl.classList.remove('hidden');
+      lookupStatusEl.textContent = 'Checking registration number...';
+      lookupStatusEl.className = 'status';
+
+      for (const variant of LOOKUP_VARIANTS) {
+        try {
+          const res = await fetch(buildLookupUrl(regNo, variant));
+          if (!res.ok) continue;
+          const payload = await res.json();
+          const data = payload && payload.data ? payload.data : null;
+          const name = data && data.name ? data.name : '';
+          const college = data && data.college_name ? data.college_name : '';
+          if (name) {
+            studentNameEl.value = name;
+            collegeEl.value = college || '';
+            lookupStatusEl.classList.add('hidden');
+            return;
+          }
+        } catch (err) {
+          // try next endpoint
+        }
+      }
+
+      collegeEl.value = '';
+      lookupStatusEl.classList.remove('hidden');
+      lookupStatusEl.textContent = 'Name not found. Type manually.';
+      lookupStatusEl.className = 'status';
+    }
+
+    async function downloadPdf() {
+      downloadStatusEl.textContent = 'Starting download...';
+      downloadStatusEl.className = 'status';
+      try {
+        const response = await fetch(PDF_PATH);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'Representation_Annexures_and_Evidence_BEU_Result_13-03-2026.pdf';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        downloadStatusEl.textContent = 'Download started. Attach the PDF manually in the mail app.';
+        downloadStatusEl.className = 'status ok';
+      } catch (err) {
+        downloadStatusEl.textContent = 'Download failed. Check the PDF file path and try again.';
+        downloadStatusEl.className = 'status';
+      }
+    }
+
+    function openMail(body) {
+      const mailto = `mailto:${encodeURIComponent(TO.join(','))}?cc=${encodeURIComponent(CC.join(','))}&subject=${encodeURIComponent(SUBJECT)}&body=${encodeURIComponent(body)}`;
+      window.location.href = mailto;
+    }
+
+    document.getElementById('lookupBtn').addEventListener('click', lookupStudent);
+    document.getElementById('downloadBtn').addEventListener('click', downloadPdf);
+    document.getElementById('supportMailBtn').addEventListener('click', () => openMail(makeSupportBody()));
+    document.getElementById('grievanceMailBtn').addEventListener('click', () => openMail(makeGrievanceBody()));
+  </script></body>
+</html>
