@@ -32,19 +32,19 @@
     .wrap {
       max-width: 860px;
       margin: 0 auto;
-      padding: 10px; /* Reduced from 14px */
+      padding: 10px;
     }
 
     .card {
       background: rgba(17, 24, 39, 0.97);
       border: 1px solid var(--line);
-      border-radius: 14px; /* Reduced from 18px */
-      padding: 12px 14px; /* Reduced from 16px */
-      margin-bottom: 10px; /* Reduced from 14px */
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
     }
 
-    h1, h2 { margin: 0 0 8px; } /* Reduced from 10px */
+    h1, h2 { margin: 0 0 8px; }
 
     h1 {
       font-size: clamp(18px, 4vw, 22px);
@@ -56,27 +56,27 @@
       text-align: center;
     }
 
-    h2 { font-size: 18px; } /* Reduced from 20px */
+    h2 { font-size: 18px; }
 
     .grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px; /* Reduced from 14px */
+      gap: 10px;
     }
 
     label {
       display: block;
       font-weight: 700;
-      margin-bottom: 4px; /* Reduced from 6px */
-      font-size: 14px; /* Reduced from 15px */
+      margin-bottom: 4px;
+      font-size: 14px;
     }
 
     input {
       width: 100%;
       border: 1px solid var(--line);
-      border-radius: 10px; /* Reduced from 14px */
-      padding: 10px 12px; /* Reduced from 13px 14px */
-      font-size: 14px; /* Reduced from 15px */
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 14px;
       color: #f8fafc;
       background: #0f172a;
       outline: none;
@@ -108,25 +108,25 @@
     .btns {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 8px; /* Reduced from 10px */
-      margin-top: 10px; /* Reduced from 12px */
+      gap: 8px;
+      margin-top: 10px;
     }
 
     .btns.single {
       grid-template-columns: 1fr;
       margin-top: 0;
-      margin-bottom: 10px; /* Reduced from 14px */
+      margin-bottom: 10px;
     }
 
     button {
       appearance: none;
       border: 0;
-      border-radius: 10px; /* Reduced from 14px */
-      padding: 10px 12px; /* Reduced from 14px 16px */
-      font-size: 14px; /* Reduced from 15px */
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 14px;
       font-weight: 700;
       cursor: pointer;
-      min-height: 44px; /* Reduced from 52px */
+      min-height: 44px;
       text-align: center;
       line-height: 1.2;
       white-space: normal;
@@ -146,9 +146,9 @@
 
     .status {
       border-radius: 10px;
-      padding: 10px; /* Reduced from 12px 13px */
-      font-size: 13px; /* Reduced from 14px */
-      margin-top: 10px; /* Reduced from 12px */
+      padding: 10px;
+      font-size: 13px;
+      margin-top: 10px;
       background: var(--status-bg);
       border: 1px solid var(--status-line);
       color: var(--status-text);
@@ -191,16 +191,17 @@
           <label for="studentName">Student name</label>
           <input id="studentName" type="text" placeholder="Auto-filled or type manually" autocomplete="off" autocapitalize="words" autocorrect="off" spellcheck="false" />
         </div>
-        <div>
+        <div style="grid-column: 1 / -1;">
           <label for="college">College</label>
           <input id="college" type="text" placeholder="Auto-filled or type manually" autocomplete="off" autocapitalize="words" autocorrect="off" spellcheck="false" />
         </div>
       </div>
 
-      <div class="btns">
+      <!-- BUTTONS STACKED: GET NAME -> GRIEVANCE (UP) -> SUPPORT (DOWN) -->
+      <div class="btns single" style="margin-top: 15px;">
         <button class="lookup-btn" id="lookupBtn">Get Name</button>
-        <button class="support-btn" id="supportMailBtn">Support Mail</button>
-        <button class="grievance-btn" id="grievanceMailBtn">Grievance Mail</button>
+        <button class="grievance-btn" id="grievanceMailBtn">Send Grievance Mail</button>
+        <button class="support-btn" id="supportMailBtn">Send Support Mail</button>
       </div>
 
       <div class="status" id="lookupStatus">If name is not found, type manually.</div>
@@ -223,6 +224,7 @@
       'secy-edn-bih@nic.in',
       'splsecretary.edn@gmail.com',
       'ssabihar@gmail.com',
+      'info@bepcssa.in',
       'info-Lokshikayat-bih@gov.in',
       'us.petitions@rb.nic.in',
       'secy.president@rb.nic.in',
