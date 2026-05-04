@@ -12,7 +12,6 @@
       --text: #e5e7eb;
       --line: #243042;
       --blue: #2563eb;
-      --blue-soft: #1e3a8a;
       --green: #15803d;
       --green-soft: #052e1a;
       --red: #b91c1c;
@@ -154,11 +153,6 @@
       color: #fff;
     }
 
-    .support-btn {
-      background: var(--blue-soft);
-      color: #fff;
-    }
-
     .grievance-btn {
       background: var(--blue);
       color: #fff;
@@ -247,7 +241,6 @@
       <div class="btns">
         <button class="lookup-btn hidden" id="lookupBtn">Step 1: Get Name</button>
         <button class="download-btn" id="downloadBtn">Step 2: Download PDF Evidence</button>
-        <button class="support-btn" id="supportMailBtn">Optional: Open Support Mail</button>
         <button class="grievance-btn" id="grievanceMailBtn">Step 3: Open Grievance Mail</button>
       </div>
 
@@ -303,8 +296,6 @@
       'ugc.technical@nic.in'
     ];
 
-    const SUPPORT_SUBJECT = 'Support for grievance regarding apparent irregularities in BEU semester results';
-
     const GRIEVANCE_SUBJECT_GENERIC =
       'Incorrect Result Uploaded Of (3307+ Students) - Illegal Application of Old Backlog Penalty in B.Tech 2nd Sem & 4th Sem Results';
 
@@ -331,7 +322,6 @@
 
     const lookupBtn = document.getElementById('lookupBtn');
     const downloadBtn = document.getElementById('downloadBtn');
-    const supportMailBtn = document.getElementById('supportMailBtn');
     const grievanceMailBtn = document.getElementById('grievanceMailBtn');
 
     function showMailStatus(message, ok = false) {
@@ -460,23 +450,6 @@
 
     function niteshContactBlock() {
       return `For any reply or further communication regarding the main grievance, the contact details are as follows:\nNitesh Kumar\nRegistration No.: 23104134010\nEmail: 23104134010@gecbanka.org / nkcbanka@gmail.com`;
-    }
-
-    function makeSupportBody() {
-      const studentName = (studentNameEl.value || '________________').trim();
-      const regNo = (regNoEl.value || '________________').trim();
-      const college = (collegeEl.value || '').trim();
-
-      const intro = introWithCollege(
-        studentName,
-        regNo,
-        college,
-        'am writing to extend my support regarding the grievance already raised by Nitesh Kumar in connection with the apparent continued application of the earlier backlog grade penalty in the affected BEU semester results.'
-      );
-
-      const sign = signBlock(studentName, regNo, college);
-
-      return `Respected Sir/Madam,\n\n${intro}\n\nI respectfully request that the matter be examined carefully, that the concerns raised in the representation be properly addressed, and that a clear written clarification be issued by the University at the earliest.\n\nThe supporting representation along with annexures and documentary evidence is attached with this email for ready reference.\n\n${niteshContactBlock()}\n\nYours faithfully,\n${sign}`;
     }
 
     function makeOwnAffectedGrievanceBody(matches) {
@@ -638,10 +611,6 @@
 
     lookupBtn.addEventListener('click', lookupStudent);
     downloadBtn.addEventListener('click', downloadPdf);
-
-    supportMailBtn.addEventListener('click', () => {
-      openMail(SUPPORT_SUBJECT, makeSupportBody());
-    });
 
     grievanceMailBtn.addEventListener('click', async () => {
       const regNo = regNoEl.value.trim();
