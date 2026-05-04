@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -193,7 +193,6 @@
         </div>
       </div>
 
-      <!-- BUTTONS STACKED IN YOUR REQUESTED ORDER -->
       <div class="btns single" style="margin-top: 15px;">
         <button class="lookup-btn hidden" id="lookupBtn">Step 1: Get Name</button>
         <button class="download-btn" id="downloadBtn">Step 2: Download PDF Evidence</button>
@@ -229,7 +228,6 @@
       'cmbihar-bih@nic.in',
       'cmbihar@nic.in',
       'ms@aicte-india.org'
-      
     ];
 
     const CC = [
@@ -254,7 +252,6 @@
     ];
 
     const SUPPORT_SUBJECT = 'Support for grievance regarding apparent irregularities in BEU semester results';
-    const GRIEVANCE_SUBJECT_MATCH = 'Request for correction and republication of my affected BEU result under revised backlog grading rules';
     const GRIEVANCE_SUBJECT_GENERIC = 'Incorrect Result Uploaded Of (3307+ Students) - Illegal Application of Old Backlog Penalty in B.Tech 2nd Sem & 4th Sem Results';
 
     const PDF_PATH = 'files/Representation_Annexures_and_Evidence_BEU_Result_13-03-2026.pdf';
@@ -317,7 +314,6 @@
     studentNameEl.addEventListener('input', saveData);
     collegeEl.addEventListener('input', saveData);
     window.addEventListener('DOMContentLoaded', loadSavedData);
-    // ==================================
 
     function buildLookupUrl(regNo, variant) {
       return `https://beu-bih.ac.in/backend/v1/result/get-result?year=${encodeURIComponent(variant.year)}&redg_no=${encodeURIComponent(regNo)}&semester=${encodeURIComponent(variant.semester)}&exam_held=${encodeURIComponent(variant.exam_held)}`;
@@ -400,10 +396,16 @@
       const studentName = (studentNameEl.value || '________________').trim();
       const regNo = (regNoEl.value || '________________').trim();
       const college = (collegeEl.value || '').trim();
-      const intro = introWithCollege(studentName, regNo, college, 'am submitting this grievance regarding my own affected result.');
-      const sign = signBlock(studentName, regNo, college);
+      
+      // Determine Examination info based on result URL
+      let examDetails = "B.Tech. Semester Examination, 2025";
+      if (match.new_result_url && match.new_result_url.includes("4th+Semester")) {
+          examDetails = "B.Tech. 4th Semester Examination, 2025 (Session: 2023-27, Exam Held: Dec/2025, Published: 20/03/2026)";
+      } else if (match.new_result_url && match.new_result_url.includes("2nd+Semester")) {
+          examDetails = "B.Tech. 2nd Semester Examination, 2025 (Old) (Session: 2023-27 YBL, Exam Held: Nov/2025, Published: 13/03/2026)";
+      }
 
-      return `Respected Sir/Madam,\n\nPlease treat this email as my own grievance regarding the apparent continued application of the earlier backlog grade penalty despite Registrar Letter No. 232 dated 12.03.2026, Memo No. 438/2026/Patna, and the revised UG Regulation provisions including Clause 5.7.\n\n${intro}\n\nAs per the compiled discrepancy data, my case reflects PENALTY_CONFIRMED in the following subject(s): *${match.subject_names.toUpperCase()}*. \n\nThe published grades shown are ${match.new_shown_grades}, whereas the grades that should have been awarded are ${match.should_be_grades}. \n\nMy shown SGPA/CGPA are *${match.shown_sgpa} / ${match.shown_cgpa}*, whereas the corrected SGPA/CGPA are *${match.corrected_sgpa} / ${match.corrected_cgpa}*.\n\nUnder the earlier rule, a backlog paper grade was reduced by one step. Under the revised framework, that one-step-lower penalty no longer continues. My result therefore requires immediate examination and correction in accordance with the revised framework.\n\nI request immediate correction and republication of my affected result, along with a brief written clarification at the earliest.\n\nThe representation, annexures, and documentary evidence are attached with this email for reference.\n\nYours faithfully,\n${sign}`;
+      return `Respected Sir/Madam,\n\nI am writing to report a critical error in my recently published semester result, where the superseded backlog grade penalty was incorrectly applied to my marks.\n\nMY AFFECTED RESULT DATA:\n* Examination: ${examDetails}\n* Affected Subject(s): ${match.subject_names.toUpperCase()}\n* Published Grade (Penalized): ${match.new_shown_grades}\n* Correct Grade Should Be: ${match.should_be_grades}\n* Published SGPA / CGPA: ${match.shown_sgpa} / ${match.shown_cgpa}\n* Corrected SGPA / CGPA: ${match.corrected_sgpa} / ${match.corrected_cgpa}\n\nPROOF OF PUBLISHED RESULT:\nYou can verify my currently uploaded, penalized result directly at this link:\n${match.new_result_url}\n\nTHE UNIVERSITY ERROR & IGNORED GRIEVANCES:\nDespite Registrar Letter No. 232 and revised Clause 5.7 explicitly removing the one-step backlog penalty, my result was processed using the outdated rules.\n\nA formal grievance regarding this exact same systemic error—which has wrongfully affected over 3,292 students—was already raised recently by Nitesh Kumar (Reg No: 23104134010, Email: 23104134010@gecbanka.org / nkcbanka@gmail.com). However, no action has been taken, and the administration appears to have ignored the matter entirely.\n\nAs a direct victim of this discrepancy, I request the immediate correction and republication of my result. I hope the authorities will finally take this mass error seriously and resolve it without further delay.\n\nI am attaching the grievance documents. The representation, annexures, and documentary evidence are attached with this email for reference.\n\nEnclosure: Representation_Annexures_and_Evidence_BEU_Result_13-03-2026.pdf\n\nYours faithfully,\n\n${studentName}\nRegistration No.: ${regNo}\n${college}`;
     }
 
     function makeGenericGrievanceBody() {
@@ -497,10 +499,12 @@
     document.getElementById('supportMailBtn').addEventListener('click', () => openMail(SUPPORT_SUBJECT, makeSupportBody()));
     document.getElementById('grievanceMailBtn').addEventListener('click', async () => {
       const regNo = regNoEl.value.trim();
+      const studentName = studentNameEl.value.trim() || 'Student';
       try {
         const match = regNo ? await findPenaltyMatch(regNo) : null;
         if (match) {
-          openMail(GRIEVANCE_SUBJECT_MATCH, makeOwnAffectedGrievanceBody(match));
+          const dynamicSubject = `URGENT: Correction Required in My Penalized Result - ${studentName} (Reg No. ${regNo})`;
+          openMail(dynamicSubject, makeOwnAffectedGrievanceBody(match));
         } else {
           openMail(GRIEVANCE_SUBJECT_GENERIC, makeGenericGrievanceBody());
         }
