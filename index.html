@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BEU Grievance Support</title>
+
   <style>
     :root {
       --bg: #0b1220;
@@ -19,7 +20,10 @@
       --status-line: #29406b;
       --status-text: #dbeafe;
     }
-    * { box-sizing: border-box; }
+
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
@@ -44,7 +48,10 @@
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
     }
 
-    h1, h2 { margin: 0 0 8px; }
+    h1,
+    h2 {
+      margin: 0 0 8px;
+    }
 
     h1 {
       font-size: clamp(18px, 4vw, 22px);
@@ -56,7 +63,9 @@
       text-align: center;
     }
 
-    h2 { font-size: 18px; }
+    h2 {
+      font-size: 18px;
+    }
 
     .grid {
       display: grid;
@@ -98,7 +107,9 @@
       border: 1px solid var(--line);
     }
 
-    input::placeholder { color: #7b8aa6; }
+    input::placeholder {
+      color: #7b8aa6;
+    }
 
     input:focus {
       border-color: #60a5fa;
@@ -107,15 +118,9 @@
 
     .btns {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    .btns.single {
       grid-template-columns: 1fr;
-      margin-top: 0;
-      margin-bottom: 10px;
+      gap: 8px;
+      margin-top: 15px;
     }
 
     button {
@@ -139,10 +144,25 @@
       opacity: 0.95;
     }
 
-    .download-btn { background: var(--red); color: #fff; }
-    .lookup-btn { background: var(--green); color: #fff; }
-    .support-btn { background: var(--blue-soft); color: #fff; }
-    .grievance-btn { background: var(--blue); color: #fff; }
+    .download-btn {
+      background: var(--red);
+      color: #fff;
+    }
+
+    .lookup-btn {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .support-btn {
+      background: var(--blue-soft);
+      color: #fff;
+    }
+
+    .grievance-btn {
+      background: var(--blue);
+      color: #fff;
+    }
 
     .status {
       border-radius: 10px;
@@ -152,6 +172,7 @@
       background: var(--status-bg);
       border: 1px solid var(--status-line);
       color: var(--status-text);
+      word-break: break-word;
     }
 
     .ok {
@@ -160,7 +181,9 @@
       color: #bbf7d0;
     }
 
-    .hidden { display: none; }
+    .hidden {
+      display: none;
+    }
 
     @media (max-width: 760px) {
       .grid,
@@ -170,39 +193,69 @@
     }
   </style>
 </head>
+
 <body>
   <div class="wrap">
     <div class="card">
       <h1>BEU Grievance Support</h1>
     </div>
-    
+
     <div class="card">
       <h2>Student details</h2>
+
       <div class="grid">
         <div>
           <label for="regNo">Registration number</label>
-          <input id="regNo" type="text" placeholder="Example: XXXXXXXX010" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
+          <input
+            id="regNo"
+            type="text"
+            placeholder="Example: XXXXXXXX010"
+            autocomplete="off"
+            autocapitalize="off"
+            autocorrect="off"
+            spellcheck="false"
+          />
         </div>
+
         <div id="nameWrapper" class="hidden">
           <label for="studentName">Student name</label>
-          <input id="studentName" type="text" placeholder="Auto-filled or type manually" autocomplete="off" autocapitalize="words" autocorrect="off" spellcheck="false" />
+          <input
+            id="studentName"
+            type="text"
+            placeholder="Auto-filled or type manually"
+            autocomplete="off"
+            autocapitalize="words"
+            autocorrect="off"
+            spellcheck="false"
+          />
         </div>
+
         <div id="collegeWrapper" style="grid-column: 1 / -1;" class="hidden">
           <label for="college">College</label>
-          <input id="college" type="text" placeholder="Auto-filled or type manually" autocomplete="off" autocapitalize="words" autocorrect="off" spellcheck="false" />
+          <input
+            id="college"
+            type="text"
+            placeholder="Auto-filled or type manually"
+            autocomplete="off"
+            autocapitalize="words"
+            autocorrect="off"
+            spellcheck="false"
+          />
         </div>
       </div>
 
-      <div class="btns single" style="margin-top: 15px;">
+      <div class="btns">
         <button class="lookup-btn hidden" id="lookupBtn">Step 1: Get Name</button>
         <button class="download-btn" id="downloadBtn">Step 2: Download PDF Evidence</button>
-        <button class="grievance-btn" id="grievanceMailBtn">Step 3: Send Grievance Mail</button>
+        <button class="support-btn" id="supportMailBtn">Optional: Open Support Mail</button>
+        <button class="grievance-btn" id="grievanceMailBtn">Step 3: Open Grievance Mail</button>
       </div>
 
       <div class="status" id="lookupStatus">If name is not found, type manually.</div>
       <div class="status" id="downloadStatus">Download the PDF first, then attach it manually in the mail app.</div>
+      <div class="status hidden" id="mailStatus"></div>
     </div>
-  </div>  
+  </div>
 
   <script>
     const TO = [
@@ -215,10 +268,10 @@
       'us.petitions@rb.nic.in',
       'secypg@nic.in',
       'pgappeal509@gmail.com',
-     'vermarachna.ugc@nic.in',
-     'ssiwach.ugc@nic.in',
-     'sulugc@gmail.com',
-     'registrar.beu@bihar.gov.in',
+      'vermarachna.ugc@nic.in',
+      'ssiwach.ugc@nic.in',
+      'sulugc@gmail.com',
+      'registrar.beu@bihar.gov.in',
       'pgofficer@dpg.gov.in',
       'vcm@aicte-india.org',
       'pubgrv@aicte-india.org',
@@ -251,7 +304,9 @@
     ];
 
     const SUPPORT_SUBJECT = 'Support for grievance regarding apparent irregularities in BEU semester results';
-    const GRIEVANCE_SUBJECT_GENERIC = 'Incorrect Result Uploaded Of (3307+ Students) - Illegal Application of Old Backlog Penalty in B.Tech 2nd Sem & 4th Sem Results';
+
+    const GRIEVANCE_SUBJECT_GENERIC =
+      'Incorrect Result Uploaded Of (3307+ Students) - Illegal Application of Old Backlog Penalty in B.Tech 2nd Sem & 4th Sem Results';
 
     const PDF_PATH = 'files/Representation_Annexures_and_Evidence_BEU_Result_13-03-2026.pdf';
     const PENALTY_TXT_PATH = 'data/penalty_calc_output.txt';
@@ -272,8 +327,19 @@
     const collegeEl = document.getElementById('college');
     const lookupStatusEl = document.getElementById('lookupStatus');
     const downloadStatusEl = document.getElementById('downloadStatus');
+    const mailStatusEl = document.getElementById('mailStatus');
 
-    // === SAVE / RESTORE STATE LOGIC ===
+    const lookupBtn = document.getElementById('lookupBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const supportMailBtn = document.getElementById('supportMailBtn');
+    const grievanceMailBtn = document.getElementById('grievanceMailBtn');
+
+    function showMailStatus(message, ok = false) {
+      mailStatusEl.classList.remove('hidden');
+      mailStatusEl.textContent = message;
+      mailStatusEl.className = ok ? 'status ok' : 'status';
+    }
+
     function loadSavedData() {
       const savedReg = localStorage.getItem('beu_reg');
       const savedName = localStorage.getItem('beu_name');
@@ -282,14 +348,16 @@
 
       if (savedReg) {
         regNoEl.value = savedReg;
+
         if (savedReg.trim().length > 0) {
-          document.getElementById('lookupBtn').classList.remove('hidden');
+          lookupBtn.classList.remove('hidden');
         }
       }
 
       if (uiRevealed === 'true') {
         document.getElementById('nameWrapper').classList.remove('hidden');
         document.getElementById('collegeWrapper').classList.remove('hidden');
+
         if (savedName) studentNameEl.value = savedName;
         if (savedCollege) collegeEl.value = savedCollege;
       }
@@ -303,16 +371,16 @@
 
     regNoEl.addEventListener('input', () => {
       if (regNoEl.value.trim().length > 0) {
-        document.getElementById('lookupBtn').classList.remove('hidden');
+        lookupBtn.classList.remove('hidden');
       } else {
-        document.getElementById('lookupBtn').classList.add('hidden');
+        lookupBtn.classList.add('hidden');
       }
+
       saveData();
     });
 
     studentNameEl.addEventListener('input', saveData);
     collegeEl.addEventListener('input', saveData);
-    window.addEventListener('DOMContentLoaded', loadSavedData);
 
     function buildLookupUrl(regNo, variant) {
       return `https://beu-bih.ac.in/backend/v1/result/get-result?year=${encodeURIComponent(variant.year)}&redg_no=${encodeURIComponent(regNo)}&semester=${encodeURIComponent(variant.semester)}&exam_held=${encodeURIComponent(variant.exam_held)}`;
@@ -320,21 +388,32 @@
 
     async function loadPenaltyRows() {
       if (penaltyRows) return penaltyRows;
+
       try {
         const res = await fetch(PENALTY_TXT_PATH);
-        if (!res.ok) throw new Error(`Penalty file HTTP ${res.status}`);
+
+        if (!res.ok) {
+          throw new Error(`Penalty file HTTP ${res.status}`);
+        }
+
         const text = await res.text();
-        const lines = text.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
-        
+        const lines = text
+          .split(/\r?\n/)
+          .map(line => line.trim())
+          .filter(Boolean);
+
         if (lines.length < 2) {
           penaltyRows = [];
           return penaltyRows;
         }
-        
+
         const rows = [];
+
         for (let i = 1; i < lines.length; i++) {
           const parts = lines[i].split('|').map(s => s.trim());
+
           if (parts.length < 14) continue;
+
           rows.push({
             reg_no: parts[0],
             branch_code: parts[1],
@@ -352,15 +431,16 @@
             new_result_url: parts[13]
           });
         }
+
         penaltyRows = rows;
         return rows;
       } catch (error) {
-        console.error("Could not load penalty data:", error);
+        console.error('Could not load penalty data:', error);
+        penaltyRows = [];
         return [];
       }
     }
 
-    // Now uses .filter() to return ALL matches (e.g. 2nd sem AND 4th sem)
     async function findPenaltyMatches(regNo) {
       const rows = await loadPenaltyRows();
       return rows.filter(row => row.reg_no === regNo);
@@ -386,30 +466,36 @@
       const studentName = (studentNameEl.value || '________________').trim();
       const regNo = (regNoEl.value || '________________').trim();
       const college = (collegeEl.value || '').trim();
-      const intro = introWithCollege(studentName, regNo, college, 'am writing to extend my support regarding the grievance already raised by Nitesh Kumar in connection with the apparent continued application of the earlier backlog grade penalty in the affected BEU semester results.');
+
+      const intro = introWithCollege(
+        studentName,
+        regNo,
+        college,
+        'am writing to extend my support regarding the grievance already raised by Nitesh Kumar in connection with the apparent continued application of the earlier backlog grade penalty in the affected BEU semester results.'
+      );
+
       const sign = signBlock(studentName, regNo, college);
 
       return `Respected Sir/Madam,\n\n${intro}\n\nI respectfully request that the matter be examined carefully, that the concerns raised in the representation be properly addressed, and that a clear written clarification be issued by the University at the earliest.\n\nThe supporting representation along with annexures and documentary evidence is attached with this email for ready reference.\n\n${niteshContactBlock()}\n\nYours faithfully,\n${sign}`;
     }
 
-    // Now accepts an ARRAY of matches to handle multiple semesters
     function makeOwnAffectedGrievanceBody(matches) {
       const studentName = (studentNameEl.value || '________________').trim();
       const regNo = (regNoEl.value || '________________').trim();
       const college = (collegeEl.value || '').trim();
 
-      // Loop over every matched penalty and generate a formatted block
       const resultBlocks = matches.map(match => {
-        let examDetails = "B.Tech. Semester Examination, 2025";
-        if (match.new_result_url && match.new_result_url.includes("4th+Semester")) {
-            examDetails = "B.Tech. 4th Semester Examination, 2025 (Session: 2023-27, Exam Held: Dec/2025, Published: 20/03/2026)";
-        } else if (match.new_result_url && match.new_result_url.includes("2nd+Semester")) {
-            examDetails = "B.Tech. 2nd Semester Examination, 2025 (Old) (Session: 2023-27 YBL, Exam Held: Nov/2025, Published: 13/03/2026)";
+        let examDetails = 'B.Tech. Semester Examination, 2025';
+
+        if (match.new_result_url && match.new_result_url.includes('4th+Semester')) {
+          examDetails = 'B.Tech. 4th Semester Examination, 2025 (Session: 2023-27, Exam Held: Dec/2025, Published: 20/03/2026)';
+        } else if (match.new_result_url && match.new_result_url.includes('2nd+Semester')) {
+          examDetails = 'B.Tech. 2nd Semester Examination, 2025 (Old) (Session: 2023-27 YBL, Exam Held: Nov/2025, Published: 13/03/2026)';
         }
 
-        const formattedSubjects = match.subject_names.toUpperCase().split(',').join(', ');
-        const formattedPublishedGrades = match.new_shown_grades.split(',').join(', ');
-        const formattedCorrectGrades = match.should_be_grades.split(',').join(', ');
+        const formattedSubjects = (match.subject_names || '').toUpperCase().split(',').join(', ');
+        const formattedPublishedGrades = (match.new_shown_grades || '').split(',').join(', ');
+        const formattedCorrectGrades = (match.should_be_grades || '').split(',').join(', ');
 
         return `MY AFFECTED RESULT DATA:\n\n* Examination: ${examDetails}\n\n* Affected Subject(s): ${formattedSubjects}\n\n* Published Grade (Penalized): ${formattedPublishedGrades}\n\n* Correct Grade Should Be: ${formattedCorrectGrades}\n\n* Published SGPA / CGPA: ${match.shown_sgpa} / ${match.shown_cgpa}\n\n* Corrected SGPA / CGPA: ${match.corrected_sgpa} / ${match.corrected_cgpa}\n\nPROOF OF PUBLISHED RESULT:\n\nYou can verify my currently uploaded, penalized result directly at this link:\n\n${match.new_result_url}`;
       }).join('\n\n======================================================\n\n');
@@ -421,7 +507,14 @@
       const studentName = (studentNameEl.value || '________________').trim();
       const regNo = (regNoEl.value || '________________').trim();
       const college = (collegeEl.value || '').trim();
-      const intro = introWithCollege(studentName, regNo, college, 'am forwarding this grievance in support of the representation submitted by Nitesh Kumar on behalf of 1330+ affected students across the state.');
+
+      const intro = introWithCollege(
+        studentName,
+        regNo,
+        college,
+        'am forwarding this grievance in support of the representation submitted by Nitesh Kumar on behalf of 1330+ affected students across the state.'
+      );
+
       const sign = signBlock(studentName, regNo, college);
 
       return `Respected Sir/Madam,\n\nPlease find attached the formal representation, along with annexures and documentary evidence, regarding the heavily flawed B.Tech. 2nd Semester Examination, 2025 (Old) results published on 13.03.2026.\n\nFurthermore, this email serves as an urgent appeal to immediately halt and review the newly published B.Tech. 4th Semester Examination, 2025 (Session 2023-27, Exam Held: December/2025, Result Published: 20.03.2026), which appears to suffer from the same systemic error.\n\n${intro}\n\nTo put the issue in the simplest possible terms, the University's result-processing appears to have applied a repealed grading penalty to backlog results despite the University's own recent orders. The position is as follows:\n\n■ The Old Rule (Clause 5.6): Previously, if a student passed a backlog paper, the final grade was reduced by one step below the grade actually earned.\n\n■ The New Rule (Notice No. 232 and Clause 5.7): On 12.03.2026, the University issued Notice No. 232 directing that the revised UG Regulations apply with immediate effect to all current students. Under revised Clause 5.7, this one-step-lower penalty no longer continues.\n\n■ The Error in Result Processing: Despite the revised framework taking immediate effect, the affected results appear to have been processed using the earlier penal logic.\n\nThe attached PDF contains the relevant notices, clause comparisons, and student-wise discrepancy records concerning the 2nd Semester result.\n\nWhile the attached data specifically documents the 2nd Semester errors, initial review of the B.Tech. 4th Semester results published on 20.03.2026 indicates that the same superseded penalty may have been carried forward there as well.\n\nIn view of the above, I respectfully request immediate examination of the matter, correction of the result-processing logic across all affected semesters, republication of the affected results wherever required, and issuance of a written reply at the earliest.\n\n${niteshContactBlock()}\n\nEnclosure: Representation_Annexures_and_Evidence_BEU_Result_13-03-2026.pdf\n\nYours faithfully,\n\n${sign}`;
@@ -429,6 +522,7 @@
 
     async function lookupStudent() {
       const regNo = regNoEl.value.trim();
+
       if (!regNo) {
         lookupStatusEl.classList.remove('hidden');
         lookupStatusEl.textContent = 'Enter registration number first.';
@@ -445,11 +539,14 @@
       for (const variant of LOOKUP_VARIANTS) {
         try {
           const res = await fetch(buildLookupUrl(regNo, variant));
+
           if (!res.ok) continue;
+
           const payload = await res.json();
           const data = payload && payload.data ? payload.data : null;
           const name = data && data.name ? data.name : '';
           const college = data && data.college_name ? data.college_name : '';
+
           if (name) {
             studentNameEl.value = name;
             collegeEl.value = college || '';
@@ -458,7 +555,7 @@
             break;
           }
         } catch (err) {
-          // try next lookup variant
+          console.warn('Lookup failed for variant:', variant, err);
         }
       }
 
@@ -468,9 +565,9 @@
         lookupStatusEl.className = 'status';
       }
 
-      // Show the fields and save state after checking
       document.getElementById('nameWrapper').classList.remove('hidden');
       document.getElementById('collegeWrapper').classList.remove('hidden');
+
       localStorage.setItem('beu_revealed', 'true');
       saveData();
     }
@@ -478,40 +575,81 @@
     async function downloadPdf() {
       downloadStatusEl.textContent = 'Starting download...';
       downloadStatusEl.className = 'status';
+
       try {
         const response = await fetch(PDF_PATH);
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
         const blob = await response.blob();
         const url = URL.createObjectURL(blob);
+
         const a = document.createElement('a');
         a.href = url;
         a.download = 'Representation_Annexures_and_Evidence_BEU_Result_13-03-2026.pdf';
+
         document.body.appendChild(a);
         a.click();
         a.remove();
-        URL.revokeObjectURL(url);
+
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+
         downloadStatusEl.textContent = 'Download started. Attach the PDF manually in the mail app.';
         downloadStatusEl.className = 'status ok';
       } catch (err) {
+        console.error(err);
         downloadStatusEl.textContent = 'Download failed. Check the PDF file path and try again.';
         downloadStatusEl.className = 'status';
       }
     }
 
-    function openMail(subject, body) {
-      const mailto = `mailto:${encodeURIComponent(TO.join(','))}?cc=${encodeURIComponent(CC.join(','))}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    async function copyBodyToClipboard(subject, body) {
+      const fullText = `Subject: ${subject}\n\n${body}`;
+
+      try {
+        await navigator.clipboard.writeText(fullText);
+        return true;
+      } catch (err) {
+        console.warn('Clipboard copy failed:', err);
+        return false;
+      }
+    }
+
+    async function openMail(subject, body) {
+      saveData();
+
+      await copyBodyToClipboard(subject, body);
+
+      const mailto =
+        `mailto:${encodeURIComponent(TO.join(','))}` +
+        `?cc=${encodeURIComponent(CC.join(','))}` +
+        `&subject=${encodeURIComponent(subject)}` +
+        `&body=${encodeURIComponent(body)}`;
+
+      showMailStatus(
+        'Opening mail app. If body is missing because the email is too long, paste manually because the message was copied.',
+        true
+      );
+
       window.location.href = mailto;
     }
 
-    document.getElementById('lookupBtn').addEventListener('click', lookupStudent);
-    document.getElementById('downloadBtn').addEventListener('click', downloadPdf);
-    document.getElementById('supportMailBtn').addEventListener('click', () => openMail(SUPPORT_SUBJECT, makeSupportBody()));
-    document.getElementById('grievanceMailBtn').addEventListener('click', async () => {
+    lookupBtn.addEventListener('click', lookupStudent);
+    downloadBtn.addEventListener('click', downloadPdf);
+
+    supportMailBtn.addEventListener('click', () => {
+      openMail(SUPPORT_SUBJECT, makeSupportBody());
+    });
+
+    grievanceMailBtn.addEventListener('click', async () => {
       const regNo = regNoEl.value.trim();
       const studentName = studentNameEl.value.trim() || 'Student';
+
       try {
-        // Now checks for length of the array returned by findPenaltyMatches
         const matches = regNo ? await findPenaltyMatches(regNo) : [];
+
         if (matches.length > 0) {
           const dynamicSubject = `URGENT: Correction Required in My Penalized Result - ${studentName} (Reg No. ${regNo})`;
           openMail(dynamicSubject, makeOwnAffectedGrievanceBody(matches));
@@ -519,9 +657,12 @@
           openMail(GRIEVANCE_SUBJECT_GENERIC, makeGenericGrievanceBody());
         }
       } catch (err) {
+        console.error(err);
         openMail(GRIEVANCE_SUBJECT_GENERIC, makeGenericGrievanceBody());
       }
     });
+
+    window.addEventListener('DOMContentLoaded', loadSavedData);
   </script>
 </body>
 </html>
