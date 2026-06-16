@@ -291,7 +291,7 @@
     ];
 
     const GRIEVANCE_SUBJECT_GENERIC =
-      'URGENT: Time-Bound Recalculation Required for Wrongly Penalized Backlog Results of Approx. 3400+ Students';
+      'URGENT: Time-Bound Review and Recalculation of Wrongly Penalized Backlog Results of Approx. 3400+ Students';
 
     const PDF_PATH = 'files/Representation_Annexures_and_Evidence_BEU_Result_13-03-2026.pdf';
     const PENALTY_TXT_PATH = 'data/penalty_calc_output.txt';
@@ -500,7 +500,6 @@
 
         const formattedSubjects = formatCommaText(match.subject_names, true);
         const formattedSubjectCodes = formatCommaText(match.penalized_subject_codes);
-        const formattedOldGrades = formatCommaText(match.old_shown_grades);
         const formattedPublishedGrades = formatCommaText(match.new_shown_grades);
         const formattedCorrectGrades = formatCommaText(match.should_be_grades);
 
@@ -512,19 +511,13 @@ ${examDetails}
 Registration No.:
 ${match.reg_no}
 
-Branch Code:
-${match.branch_code}
-
 Affected Subject Code(s):
 ${formattedSubjectCodes}
 
 Affected Subject(s):
 ${formattedSubjects}
 
-Old / Earlier Shown Grade(s):
-${formattedOldGrades}
-
-Published Grade(s) After Penalty:
+Published Grade(s):
 ${formattedPublishedGrades}
 
 Correct Grade(s) Should Be:
@@ -534,23 +527,13 @@ Published SGPA / CGPA:
 ${match.shown_sgpa} / ${match.shown_cgpa}
 
 Corrected SGPA / CGPA:
-${match.corrected_sgpa} / ${match.corrected_cgpa}
+${match.corrected_sgpa} / ${match.corrected_cgpa}`;
+      }).join('\n\n');
 
-Penalty Verification Status:
-${match.status}
-
-Official Result Verification:
-Due to captcha/restriction on direct result links, the result may be verified from the official BEU result portal by entering the above registration number:
-${RESULT_HOME_URL}
-
-Old Result Reference:
-${match.old_result_url || 'Not available'}`;
-      }).join('\n\n------------------------------------------------------------\n\n');
-
-      return `${resultBlocks}\n\n============================================================\n\n`;
+      return `${resultBlocks}\n\n`;
     }
 
-    function makePowerfulGrievanceBody(matches = []) {
+    function makePersonalAffectedMail(matches = []) {
       const studentName = (studentNameEl.value || '________________').trim();
       const regNo = (regNoEl.value || '________________').trim();
       const college = (collegeEl.value || '').trim();
@@ -559,21 +542,15 @@ ${match.old_result_url || 'Not available'}`;
 
       return `Respected Sir/Madam,
 
-This is an urgent student representation regarding the continued non-correction of wrongly penalized backlog results under Bihar Engineering University, Patna.
+I am writing to report a serious and continuing error in the backlog result computation under Bihar Engineering University, Patna.
 
-I request immediate attention from the Vice-Chancellor, Registrar, Examination Controller, Result / IT Processing Cell, and all concerned authorities because the same superseded backlog penalty issue appears to be continuing even after Notice No. 232 dated 12.03.2026.
+My result data, as identified from the affected-student penalty database, shows that the superseded one-step backlog penalty has been applied to my published result.
 
-${affectedBlock}CORE GRIEVANCE
+${affectedBlock}The core issue is that after Notice No. 232 dated 12.03.2026, the revised regulations were made applicable with immediate effect to presently studying students. Under revised Clause 5.7, backlog evaluation is based on the latest examination and previous internal assessment. The earlier one-step-lower backlog penalty is not continued in the revised provision.
 
-The revised regulations were made applicable with immediate effect to presently studying students. After this, the earlier backlog rule of reducing the earned grade by one step should not continue.
+Despite this, the published backlog results still show penalized grades instead of the correct earned grades. This has directly reduced SGPA/CGPA and caused academic loss.
 
-However, the published backlog-related results appear to still reflect the old one-step-lower penalty logic. This has caused wrongful grade reduction, SGPA/CGPA depression, academic uncertainty, and serious prejudice to approximately 3400+ affected students.
-
-This is not a minor calculation issue. A wrongful one-grade reduction directly affects academic record, scholarship eligibility, placement shortlisting, internship opportunities, progression confidence, and the mental pressure of students.
-
-A formal representation with annexures and documentary evidence was already submitted earlier. Despite this, students have not received any clear correction, republication, or written clarification. The continued silence is creating mass academic prejudice.
-
-AFFECTED RESULT CATEGORIES
+This is not an isolated issue. The same penalty error affects approximately 3400+ students across the following results:
 
 1. B.Tech. 2nd Semester Examination, 2025 (Old)
 Session: 2023-27 (YBL)
@@ -590,30 +567,91 @@ Session: 2023-27 (YBL)
 Exam Held: January/2026
 Result Published: 23/05/2026
 
-BASIS OF OBJECTION
+A formal representation with annexures and evidence was already submitted earlier, but students have not received any clear correction, republication, or written clarification. This continued delay is causing serious academic prejudice to thousands of students.
 
-The old regulation contained the one-step-lower penalty for backlog papers. The revised Clause 5.7 provides backlog evaluation on the basis of the latest examination and previous internal assessment, but it does not continue the earlier one-step-lower penalty.
-
-Therefore, continued application of the old penalty after the revised framework was notified is prima facie inconsistent with the University's own notification and revised provisions.
-
-SUPPORTING EVIDENCE
-
-Earlier representation, annexures, result sheets, and affected student data are available here:
+Supporting evidence, affected student data, and result comparison records are available here:
 ${DRIVE_EVIDENCE_LINK}
 
 Official BEU result portal for verification:
 ${RESULT_HOME_URL}
 
-REQUESTED ACTION
+Therefore, I respectfully request the competent authorities to:
 
-I respectfully request the competent authorities to:
+1. Immediately verify the result-processing logic used in the above backlog results.
+2. Recalculate and republish all affected results where the old one-step penalty has been applied.
+3. Correct my published grade(s), SGPA, and CGPA as per the revised rules.
+4. Issue a written clarification explaining which backlog rule was used after Notice No. 232.
+5. Direct the IT / Result Processing Cell to remove the superseded penalty logic from all affected, pending, and future result calculations.
+6. Provide a time-bound response, as students have already waited for a long time.
+
+The students are not asking for any favour. We are only requesting correct implementation of the University's own revised rules.
+
+Enclosure:
+Representation_Annexures_and_Evidence_BEU_Result_13-03-2026.pdf
+
+Yours faithfully,
+
+${sign}`;
+    }
+
+    function makeGeneralSupportMail() {
+      const studentName = (studentNameEl.value || '________________').trim();
+      const regNo = (regNoEl.value || '________________').trim();
+      const college = (collegeEl.value || '').trim();
+      const sign = signBlock(studentName, regNo, college);
+
+      return `Respected Sir/Madam,
+
+I am writing to support and escalate the unresolved grievance regarding wrongly penalized backlog results under Bihar Engineering University, Patna.
+
+A serious issue has been raised by affected students regarding the continued application of the superseded one-step-lower backlog penalty even after Notice No. 232 dated 12.03.2026.
+
+The matter may kindly be viewed in the following clear manner:
+
+■ The Old Rule (Clause 5.6):
+Previously, if a student passed a backlog paper, the final grade was reduced by one step below the grade actually earned.
+
+■ The New Rule (Notice No. 232 and Clause 5.7):
+On 12.03.2026, the University issued Notice No. 232 directing that the revised UG Regulations apply with immediate effect to all current students. Under revised Clause 5.7, backlog evaluation is based on the latest examination and previous internal assessment. The earlier one-step-lower penalty no longer continues in the revised provision.
+
+■ The Error in Result Processing:
+Despite the revised framework taking immediate effect, the affected backlog-related results appear to have been processed using the earlier penal logic. This has caused wrongful grade reduction, SGPA/CGPA depression, academic uncertainty, and serious prejudice to approximately 3400+ students.
+
+The affected result categories include:
+
+1. B.Tech. 2nd Semester Examination, 2025 (Old)
+Session: 2023-27 (YBL)
+Exam Held: November/2025
+Result Published: 13/03/2026
+
+2. B.Tech. 4th Semester Examination, 2025
+Session: 2023-27
+Exam Held: December/2025
+Result Published: 20/03/2026
+
+3. B.Tech. 1st Semester Examination, 2025 (Old)
+Session: 2023-27 (YBL)
+Exam Held: January/2026
+Result Published: 23/05/2026
+
+This is not a minor calculation issue. A wrongful one-grade reduction can directly affect SGPA, CGPA, academic record, scholarship eligibility, placement shortlisting, internship opportunities, and future academic progression.
+
+A formal representation with annexures and evidence was already submitted earlier, but students have not received any clear correction, republication, or written clarification. The continued silence is causing mass academic prejudice and loss of confidence among students.
+
+Supporting evidence, affected student data, and result comparison records are available here:
+${DRIVE_EVIDENCE_LINK}
+
+Official BEU result portal for verification:
+${RESULT_HOME_URL}
+
+Therefore, I respectfully request the competent authorities to:
 
 1. Immediately review the result-processing logic used in the above backlog-related results.
-2. Verify whether the old one-step-lower backlog penalty was applied after Notice No. 232 dated 12.03.2026.
+2. Verify whether the old one-step-lower penalty was applied after Notice No. 232 dated 12.03.2026.
 3. Recalculate and republish all affected results wherever the superseded penalty has been used.
-4. Issue a written clarification explaining which rule was used for backlog grade calculation after 12.03.2026.
-5. Direct the IT / Result Processing Cell to remove the superseded one-step-lower penalty logic from all future, pending, and already affected result calculations.
-6. Provide a time-bound response, because students have already waited for a long time and the same unresolved issue is repeatedly affecting multiple declared results.
+4. Issue a written clarification explaining which backlog rule was used after Notice No. 232.
+5. Direct the IT / Result Processing Cell to remove the superseded penalty logic from all affected, pending, and future result calculations.
+6. Provide a time-bound response to prevent further academic harm to students.
 
 The students are not asking for any favour. We are only requesting correct implementation of the University's own revised rules and fair recomputation of affected results.
 
@@ -739,10 +777,15 @@ Regards`
 
       try {
         const matches = regNo ? await findPenaltyMatches(regNo) : [];
-        openMail(GRIEVANCE_SUBJECT_GENERIC, makePowerfulGrievanceBody(matches));
+
+        if (matches.length > 0) {
+          openMail(GRIEVANCE_SUBJECT_GENERIC, makePersonalAffectedMail(matches));
+        } else {
+          openMail(GRIEVANCE_SUBJECT_GENERIC, makeGeneralSupportMail());
+        }
       } catch (err) {
         console.error(err);
-        openMail(GRIEVANCE_SUBJECT_GENERIC, makePowerfulGrievanceBody([]));
+        openMail(GRIEVANCE_SUBJECT_GENERIC, makeGeneralSupportMail());
       }
     });
 
