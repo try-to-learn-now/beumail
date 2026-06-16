@@ -658,6 +658,13 @@ ${sign}`;
       }
     }
 
+    function normalizeEmailText(text) {
+      return text
+        .replace(/\r?\n/g, '\r\n')
+        .replace(/\r\n{3,}/g, '\r\n\r\n')
+        .trim();
+    }
+
     async function copyBodyToClipboard(subject, body) {
       const fullText = `Subject: ${subject}\n\n${body}`;
 
@@ -673,43 +680,56 @@ ${sign}`;
     async function openMail(subject, body) {
       saveData();
 
-      const copied = await copyBodyToClipboard(subject, body);
+      const fullBody = normalizeEmailText(body);
+      const copied = await copyBodyToClipboard(subject, fullBody);
 
-      /*
-        Long mailto links often break in Gmail/mobile browsers.
-        Full strong email is copied to clipboard.
-        Mail app opens with a short safe body.
-        User can paste the full copied email body if Gmail cuts the text.
-      */
-
-      const shortBody =
-        `Respected Sir/Madam,\n\n` +
-        `This is an urgent request for time-bound review and recalculation of wrongly penalized backlog results of approximately 3400+ affected students after Notice No. 232 dated 12.03.2026.\n\n` +
-        `The full detailed grievance email has been copied to clipboard. If the complete text is not visible here, please paste it manually in this mail body.\n\n` +
-        `Supporting evidence folder:\n${DRIVE_EVIDENCE_LINK}\n\n` +
-        `Official BEU result portal:\n${RESULT_HOME_URL}\n\n` +
-        `Please also find the PDF evidence manually attached by the student.\n\n` +
-        `Regards`;
-
-      const mailto =
+      const fullMailto =
         `mailto:${encodeURIComponent(TO.join(','))}` +
         `?cc=${encodeURIComponent(CC.join(','))}` +
         `&subject=${encodeURIComponent(subject)}` +
-        `&body=${encodeURIComponent(shortBody)}`;
+        `&body=${encodeURIComponent(fullBody)}`;
+
+      const fallbackBody = normalizeEmailText(
+        `Respected Sir/Madam,
+
+This is an urgent request for time-bound review and recalculation of wrongly penalized backlog results of approximately 3400+ affected students after Notice No. 232 dated 12.03.2026.
+
+The full detailed grievance email has been copied to clipboard. If the complete text is not visible here, please paste it manually in this mail body.
+
+Supporting evidence folder:
+${DRIVE_EVIDENCE_LINK}
+
+Official BEU result portal:
+${RESULT_HOME_URL}
+
+Please also find the PDF evidence manually attached by the student.
+
+Regards`
+      );
+
+      const fallbackMailto =
+        `mailto:${encodeURIComponent(TO.join(','))}` +
+        `?cc=${encodeURIComponent(CC.join(','))}` +
+        `&subject=${encodeURIComponent(subject)}` +
+        `&body=${encodeURIComponent(fallbackBody)}`;
 
       if (copied) {
         showMailStatus(
-          'Full powerful grievance copied. Opening mail app. If full body is missing, long press and paste in Gmail body.',
+          'Full grievance copied and opening mail app. If Gmail cuts body, paste the copied full email manually.',
           true
         );
       } else {
         showMailStatus(
-          'Opening mail app. Clipboard copy failed, so copy the mail text manually if needed.',
+          'Opening mail app. Clipboard copy failed, but full body will be tried in mail app.',
           false
         );
       }
 
-      window.location.href = mailto;
+      if (fullMailto.length < 14000) {
+        window.location.href = fullMailto;
+      } else {
+        window.location.href = fallbackMailto;
+      }
     }
 
     downloadBtn.addEventListener('click', downloadPdf);
