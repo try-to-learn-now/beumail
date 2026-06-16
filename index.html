@@ -148,11 +148,6 @@
       color: #fff;
     }
 
-    .lookup-btn {
-      background: var(--green);
-      color: #fff;
-    }
-
     .grievance-btn {
       background: var(--blue);
       color: #fff;
@@ -203,7 +198,7 @@
           <input
             id="regNo"
             type="text"
-            placeholder="Example: XXXXXXXX010"
+            placeholder="Example: 23104108010"
             autocomplete="off"
             autocapitalize="off"
             autocorrect="off"
@@ -211,12 +206,12 @@
           />
         </div>
 
-        <div id="nameWrapper" class="hidden">
+        <div id="nameWrapper">
           <label for="studentName">Student name</label>
           <input
             id="studentName"
             type="text"
-            placeholder="Auto-filled or type manually"
+            placeholder="Type your name manually"
             autocomplete="off"
             autocapitalize="words"
             autocorrect="off"
@@ -224,12 +219,12 @@
           />
         </div>
 
-        <div id="collegeWrapper" style="grid-column: 1 / -1;" class="hidden">
+        <div id="collegeWrapper" style="grid-column: 1 / -1;">
           <label for="college">College</label>
           <input
             id="college"
             type="text"
-            placeholder="Auto-filled or type manually"
+            placeholder="College auto-filled from registration number"
             autocomplete="off"
             autocapitalize="words"
             autocorrect="off"
@@ -243,7 +238,7 @@
         <button class="grievance-btn" id="grievanceMailBtn">Step 3: Open Grievance Mail</button>
       </div>
 
-      <div class="status" id="lookupStatus">If name is not found, type manually.</div>
+      <div class="status" id="lookupStatus">Enter registration number. College will auto-fill.</div>
       <div class="status" id="downloadStatus">Download the PDF first, then attach it manually in the mail app.</div>
       <div class="status hidden" id="mailStatus"></div>
     </div>
@@ -300,17 +295,10 @@
 
     const PDF_PATH = 'files/Representation_Annexures_and_Evidence_BEU_Result_13-03-2026.pdf';
     const PENALTY_TXT_PATH = 'data/penalty_calc_output.txt';
-
-    const LOOKUP_VARIANTS = [
-      { year: '2025', semester: 'II', exam_held: 'November/2025' },
-      { year: '2025', semester: 'IV', exam_held: 'December/2025' },
-      { year: '2025', semester: 'VI', exam_held: 'November/2025' },
-      { year: '2025', semester: 'VIII', exam_held: 'May/2025' },
-      { year: '2024', semester: 'I', exam_held: 'May/2025' },
-      { year: '2024', semester: 'III', exam_held: 'July/2025' }
-    ];
+    const COLLEGE_CODES_PATH = 'data/college_codes.json';
 
     let penaltyRows = null;
+    let COLLEGE_BY_CODE = {};
 
     const regNoEl = document.getElementById('regNo');
     const studentNameEl = document.getElementById('studentName');
@@ -319,7 +307,6 @@
     const downloadStatusEl = document.getElementById('downloadStatus');
     const mailStatusEl = document.getElementById('mailStatus');
 
-    const lookupBtn = document.getElementById('lookupBtn');
     const downloadBtn = document.getElementById('downloadBtn');
     const grievanceMailBtn = document.getElementById('grievanceMailBtn');
 
@@ -329,27 +316,70 @@
       mailStatusEl.className = ok ? 'status ok' : 'status';
     }
 
+    async function loadCollegeCodes() {
+      try {
+        const res = await fetch(COLLEGE_CODES_PATH);
+
+        if (!res.ok) {
+          throw new Error(`College code file HTTP ${res.status}`);
+        }
+
+        COLLEGE_BY_CODE = await res.json();
+
+        lookupStatusEl.textContent = 'College code list loaded. Enter registration number.';
+        lookupStatusEl.className = 'status ok';
+      } catch (error) {
+        console.error('Could not load college codes:', error);
+
+        lookupStatusEl.textContent = 'College code list not loaded. Type college manually.';
+        lookupStatusEl.className = 'status';
+      }
+    }
+
+    function getCollegeCodeFromRegNo(regNo) {
+      const cleanReg = regNo.trim();
+
+      if (cleanReg.length < 8) {
+        return '';
+      }
+
+      return cleanReg.slice(5, 8);
+    }
+
+    function autoFillCollegeFromRegNo() {
+      const regNo = regNoEl.value.trim();
+      const collegeCode = getCollegeCodeFromRegNo(regNo);
+      const collegeName = COLLEGE_BY_CODE[collegeCode];
+
+      if (!regNo) {
+        lookupStatusEl.textContent = 'Enter registration number. College will auto-fill.';
+        lookupStatusEl.className = 'status';
+        saveData();
+        return;
+      }
+
+      if (collegeName) {
+        collegeEl.value = collegeName;
+        lookupStatusEl.textContent = `College auto-filled using code ${collegeCode}.`;
+        lookupStatusEl.className = 'status ok';
+      } else {
+        lookupStatusEl.textContent = `College code ${collegeCode || 'not found'} not found. Type college manually.`;
+        lookupStatusEl.className = 'status';
+      }
+
+      saveData();
+    }
+
     function loadSavedData() {
       const savedReg = localStorage.getItem('beu_reg');
       const savedName = localStorage.getItem('beu_name');
       const savedCollege = localStorage.getItem('beu_col');
-      const uiRevealed = localStorage.getItem('beu_revealed');
 
-      if (savedReg) {
-        regNoEl.value = savedReg;
+      if (savedReg) regNoEl.value = savedReg;
+      if (savedName) studentNameEl.value = savedName;
+      if (savedCollege) collegeEl.value = savedCollege;
 
-        if (savedReg.trim().length > 0) {
-          lookupBtn.classList.remove('hidden');
-        }
-      }
-
-      if (uiRevealed === 'true') {
-        document.getElementById('nameWrapper').classList.remove('hidden');
-        document.getElementById('collegeWrapper').classList.remove('hidden');
-
-        if (savedName) studentNameEl.value = savedName;
-        if (savedCollege) collegeEl.value = savedCollege;
-      }
+      autoFillCollegeFromRegNo();
     }
 
     function saveData() {
@@ -358,22 +388,9 @@
       localStorage.setItem('beu_col', collegeEl.value);
     }
 
-    regNoEl.addEventListener('input', () => {
-      if (regNoEl.value.trim().length > 0) {
-        lookupBtn.classList.remove('hidden');
-      } else {
-        lookupBtn.classList.add('hidden');
-      }
-
-      saveData();
-    });
-
+    regNoEl.addEventListener('input', autoFillCollegeFromRegNo);
     studentNameEl.addEventListener('input', saveData);
     collegeEl.addEventListener('input', saveData);
-
-    function buildLookupUrl(regNo, variant) {
-      return `https://beu-bih.ac.in/backend/v1/result/get-result?year=${encodeURIComponent(variant.year)}&redg_no=${encodeURIComponent(regNo)}&semester=${encodeURIComponent(variant.semester)}&exam_held=${encodeURIComponent(variant.exam_held)}`;
-    }
 
     async function loadPenaltyRows() {
       if (penaltyRows) return penaltyRows;
@@ -492,58 +509,6 @@
       return `Respected Sir/Madam,\n\nPlease find attached the formal representation, along with annexures and documentary evidence, regarding the heavily flawed B.Tech. 2nd Semester Examination, 2025 (Old) results published on 13.03.2026.\n\nFurthermore, this email serves as an urgent appeal to immediately halt and review the newly published B.Tech. 4th Semester Examination, 2025 (Session 2023-27, Exam Held: December/2025, Result Published: 20.03.2026), which appears to suffer from the same systemic error.\n\n${intro}\n\nTo put the issue in the simplest possible terms, the University's result-processing appears to have applied a repealed grading penalty to backlog results despite the University's own recent orders. The position is as follows:\n\n■ The Old Rule (Clause 5.6): Previously, if a student passed a backlog paper, the final grade was reduced by one step below the grade actually earned.\n\n■ The New Rule (Notice No. 232 and Clause 5.7): On 12.03.2026, the University issued Notice No. 232 directing that the revised UG Regulations apply with immediate effect to all current students. Under revised Clause 5.7, this one-step-lower penalty no longer continues.\n\n■ The Error in Result Processing: Despite the revised framework taking immediate effect, the affected results appear to have been processed using the earlier penal logic.\n\nThe attached PDF contains the relevant notices, clause comparisons, and student-wise discrepancy records concerning the 2nd Semester result.\n\nWhile the attached data specifically documents the 2nd Semester errors, initial review of the B.Tech. 4th Semester results published on 20.03.2026 indicates that the same superseded penalty may have been carried forward there as well.\n\nIn view of the above, I respectfully request immediate examination of the matter, correction of the result-processing logic across all affected semesters, republication of the affected results wherever required, and issuance of a written reply at the earliest.\n\n${niteshContactBlock()}\n\nEnclosure: Representation_Annexures_and_Evidence_BEU_Result_13-03-2026.pdf\n\nYours faithfully,\n\n${sign}`;
     }
 
-    async function lookupStudent() {
-      const regNo = regNoEl.value.trim();
-
-      if (!regNo) {
-        lookupStatusEl.classList.remove('hidden');
-        lookupStatusEl.textContent = 'Enter registration number first.';
-        lookupStatusEl.className = 'status';
-        return;
-      }
-
-      lookupStatusEl.classList.remove('hidden');
-      lookupStatusEl.textContent = 'Checking registration number...';
-      lookupStatusEl.className = 'status';
-
-      let found = false;
-
-      for (const variant of LOOKUP_VARIANTS) {
-        try {
-          const res = await fetch(buildLookupUrl(regNo, variant));
-
-          if (!res.ok) continue;
-
-          const payload = await res.json();
-          const data = payload && payload.data ? payload.data : null;
-          const name = data && data.name ? data.name : '';
-          const college = data && data.college_name ? data.college_name : '';
-
-          if (name) {
-            studentNameEl.value = name;
-            collegeEl.value = college || '';
-            lookupStatusEl.classList.add('hidden');
-            found = true;
-            break;
-          }
-        } catch (err) {
-          console.warn('Lookup failed for variant:', variant, err);
-        }
-      }
-
-      if (!found) {
-        lookupStatusEl.classList.remove('hidden');
-        lookupStatusEl.textContent = 'Name not found. Type manually.';
-        lookupStatusEl.className = 'status';
-      }
-
-      document.getElementById('nameWrapper').classList.remove('hidden');
-      document.getElementById('collegeWrapper').classList.remove('hidden');
-
-      localStorage.setItem('beu_revealed', 'true');
-      saveData();
-    }
-
     async function downloadPdf() {
       downloadStatusEl.textContent = 'Starting download...';
       downloadStatusEl.className = 'status';
@@ -608,7 +573,6 @@
       window.location.href = mailto;
     }
 
-    lookupBtn.addEventListener('click', lookupStudent);
     downloadBtn.addEventListener('click', downloadPdf);
 
     grievanceMailBtn.addEventListener('click', async () => {
@@ -630,7 +594,10 @@
       }
     });
 
-    window.addEventListener('DOMContentLoaded', loadSavedData);
+    window.addEventListener('DOMContentLoaded', async () => {
+      await loadCollegeCodes();
+      loadSavedData();
+    });
   </script>
 </body>
 </html>
